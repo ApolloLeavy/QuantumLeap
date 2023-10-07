@@ -104,7 +104,7 @@ public class Player : MonoBehaviour
         {
             
             lastJump = true;
-            
+            grounded = false;
             myRig.velocity = Vector2.zero;
             
             if (lastDirection == Vector2.zero)
@@ -115,7 +115,7 @@ public class Player : MonoBehaviour
         if (ev.canceled)
         {
 
-            grounded = false;
+            
             lastJump = false;
             myAnime.SetBool("Jump", false);
         }
