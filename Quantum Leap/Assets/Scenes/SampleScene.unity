@@ -416,7 +416,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 843727097}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: onLeftPortal
+        m_MethodName: onRed
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -488,7 +488,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 843727097}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: onRightPortal
+        m_MethodName: onBlue
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -500,6 +500,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 47822b41-c0ee-4fc1-907c-0f289b8a5832
     m_ActionName: Player/RightPortal[/Mouse/rightButton,/Keyboard/l,/Keyboard/upArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 843727097}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: onGreen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 90a4cded-feac-4bae-b032-bb80aff58efa
+    m_ActionName: Player/Green[/Keyboard/3]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -514,7 +530,7 @@ Transform:
   m_GameObject: {fileID: 843727088}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.34, y: -0.07, z: 0}
+  m_LocalPosition: {x: 4.34, y: -4.04, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -614,7 +630,8 @@ MonoBehaviour:
   canJump: 1
   lastJump: 0
   portal: 1
-  jumpValue: 0
+  jumpCharge: 0
+  jumpValue: 2
   grounded: 1
 --- !u!50 &843727098
 Rigidbody2D:

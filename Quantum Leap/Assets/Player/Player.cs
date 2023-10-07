@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public bool canJump = true;
     public bool lastJump = false;
     public int portal = 1;
+    public int jumpCharge = 0;
     public float jumpValue = 6.0f;
     GameObject[] layer;
     public bool grounded = true;
@@ -31,30 +32,28 @@ public class Player : MonoBehaviour
             throw new System.Exception("Player controller needs rigidbody");
 
     }
-    public void onLeftPortal(InputAction.CallbackContext ev)
+    public void onRed(InputAction.CallbackContext ev)
     {
         if(ev.started)
-        {
-            subPortal();
-            portal -= 1;
-            if (portal == -1)
-                portal = 2;
-            addPortal();
-            
+        { 
+                jumpCharge = 0; 
         }  
     }
-    public void onRightPortal(InputAction.CallbackContext ev)
+    public void onBlue(InputAction.CallbackContext ev)
     {
         if (ev.started)
         {
-            subPortal();
-            portal += 1;
-            if (portal == 3)
-                portal = 0;
-            addPortal();
-            
-        }    
+            jumpCharge = 1;
+        }
     }
+    public void onGreen(InputAction.CallbackContext ev)
+    {
+        if (ev.started)
+        {
+            jumpCharge = 2;
+        }
+    }
+
 
     private void subPortal()
     {
@@ -101,11 +100,11 @@ public class Player : MonoBehaviour
     }
     public void onJump(InputAction.CallbackContext ev)
     {
-        if (ev.started && canJump)
+        if (ev.started && canJump && grounded)
         {
             
             lastJump = true;
-            speed = 0;
+            
             myRig.velocity = Vector2.zero;
             
             if (lastDirection == Vector2.zero)
@@ -115,6 +114,7 @@ public class Player : MonoBehaviour
         }
         if (ev.canceled)
         {
+
             grounded = false;
             lastJump = false;
             myAnime.SetBool("Jump", false);
@@ -148,26 +148,34 @@ public class Player : MonoBehaviour
 
         if (lastJump && canJump)
         {
-            jumpValue += 0.02f;
-            
+            if (jumpValue < 10.0f)
+                jumpValue += 0.05f;
+            speed = 0.0f;
         }
-        else if(!lastJump && jumpValue > 0.0f)
+        else if(!lastJump && jumpValue > 2.0f)
         {
+            speed = 5.0f;
             myRig.velocity = new Vector2(lastDirection.x * jumpValue, lastDirection.y * jumpValue );
             jumpValue = 2.0f;
+            canJump = false;
+            subPortal();
+            portal = jumpCharge;
+            addPortal();
+            
         }
         else if (!canJump && myRig.velocity.y <= 0)
         {
             RaycastHit2D check;
 
-            if (check = Physics2D.Raycast(this.transform.position - new Vector3(0,0.0f,0), this.transform.up * -1))
+            if (check = Physics2D.Raycast(this.transform.position - new Vector3(0,0.5f,0), this.transform.up * -1))
             {
                 if (check.distance < 0.01f)
                 {
                     canJump = true;
-                    speed = 5.0f;
+                    
                     myAnime.SetBool("Grounded", true);
                     grounded = true;
+                    
                     
                 }
             }
