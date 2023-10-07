@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public bool lastJump = false;
     public int portal = 1;
     public int jumpCharge = 0;
-    public float jumpValue = 6.0f;
+    public float jumpValue = 0f;
     GameObject[] layer;
     public bool grounded = true;
     // Start is called before the first frame update
@@ -158,7 +158,7 @@ public class Player : MonoBehaviour
             speed = 5.0f;
             
             myRig.velocity = new Vector2(lastDirection.x * jumpValue, jumpValue );
-            jumpValue = 2.0f;
+            jumpValue = 0.0f;
             canJump = false;
             subPortal();
             portal = jumpCharge;
