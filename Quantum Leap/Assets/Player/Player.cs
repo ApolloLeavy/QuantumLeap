@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public bool lastJump = false;
     public int portal = 1;
     public int jumpCharge = 0;
-    public float jumpValue = 6.0f;
+    public float jumpValue = 0f;
     GameObject[] layer;
     public bool grounded = true;
     // Start is called before the first frame update
@@ -92,6 +92,10 @@ public class Player : MonoBehaviour
             }
             
         }
+        else if(ev.performed)
+        {
+            lastDirection = ev.ReadValue<Vector2>();
+        }
         if (ev.canceled)
         {
             lastDirection = Vector2.zero;
@@ -149,8 +153,8 @@ public class Player : MonoBehaviour
         if (lastJump && canJump)
         {
 
-            if (jumpValue < 10.0f)
-                jumpValue += 0.05f;
+            if (jumpValue < 7.0f)
+                jumpValue += 0.1f;
             speed = 0.0f;
         }
         else if(!lastJump && jumpValue > 2.0f)
@@ -158,7 +162,7 @@ public class Player : MonoBehaviour
             speed = 5.0f;
             
             myRig.velocity = new Vector2(lastDirection.x * jumpValue, jumpValue );
-            jumpValue = 2.0f;
+            jumpValue = 0.0f;
             canJump = false;
             subPortal();
             portal = jumpCharge;
@@ -171,6 +175,7 @@ public class Player : MonoBehaviour
 
             if (check = Physics2D.Raycast(this.transform.position - new Vector3(0,0.1f,0), this.transform.up * -1))
             {
+                if(check.collider.gameObject.GetComponent<SpriteRenderer>().forceRenderingOff == false)
                 if (check.distance < 0.01f)
                 {
                     canJump = true;

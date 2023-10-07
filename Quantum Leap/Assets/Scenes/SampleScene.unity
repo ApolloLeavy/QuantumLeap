@@ -1411,7 +1411,7 @@ MonoBehaviour:
   lastJump: 0
   portal: 1
   jumpCharge: 0
-  jumpValue: 1
+  jumpValue: 0
   grounded: 1
 --- !u!50 &843727098
 Rigidbody2D:
@@ -2769,7 +2769,7 @@ Transform:
   m_GameObject: {fileID: 1696719459}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.48, y: -2.49, z: 0}
+  m_LocalPosition: {x: 0.26, y: -2.49, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
