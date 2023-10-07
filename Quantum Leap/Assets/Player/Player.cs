@@ -149,8 +149,8 @@ public class Player : MonoBehaviour
         if (lastJump && canJump)
         {
 
-            if (jumpValue < 10.0f)
-                jumpValue += 0.05f;
+            if (jumpValue < 7.0f)
+                jumpValue += 0.2f;
             speed = 0.0f;
         }
         else if(!lastJump && jumpValue > 2.0f)
@@ -171,6 +171,7 @@ public class Player : MonoBehaviour
 
             if (check = Physics2D.Raycast(this.transform.position - new Vector3(0,0.1f,0), this.transform.up * -1))
             {
+                if(check.collider.gameObject.GetComponent<SpriteRenderer>().forceRenderingOff == false)
                 if (check.distance < 0.01f)
                 {
                     canJump = true;
