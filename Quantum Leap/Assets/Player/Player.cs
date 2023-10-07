@@ -142,7 +142,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         
-        
+        if(grounded)
         myRig.velocity = new Vector2(lastDirection.x * speed, myRig.velocity.y) + platform;
         myAnime.SetFloat("AirSpeedY", myRig.velocity.y);
 
