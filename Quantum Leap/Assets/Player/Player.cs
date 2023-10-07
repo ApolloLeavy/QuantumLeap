@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class Player : MonoBehaviour
     public bool lastJump = false;
     public int portal = 1;
     public int jumpCharge = 0;
-    public float jumpValue = 0f;
+    public float jumpValue = 1.0f;
     GameObject[] layer;
     public bool grounded = true;
     // Start is called before the first frame update
@@ -36,7 +37,7 @@ public class Player : MonoBehaviour
     {
         if(ev.started)
         { 
-                jumpCharge = 0; 
+            jumpCharge = 0; 
         }  
     }
     public void onBlue(InputAction.CallbackContext ev)
@@ -60,8 +61,8 @@ public class Player : MonoBehaviour
         layer = FindGameObjectsInLayer(6 + portal);
         foreach (GameObject o in layer)
         {
-            o.GetComponent<SpriteRenderer>().forceRenderingOff = true;
-            o.GetComponent<Collider2D>().excludeLayers += LayerMask.GetMask("Player");
+            o.GetComponent<TilemapRenderer>().forceRenderingOff = true;
+            o.GetComponent<TilemapCollider2D>().excludeLayers += LayerMask.GetMask("Player");
         }
     }
     private void addPortal()
@@ -69,8 +70,8 @@ public class Player : MonoBehaviour
         layer = FindGameObjectsInLayer(6 + portal);
         foreach (GameObject o in layer)
         {
-            o.GetComponent<SpriteRenderer>().forceRenderingOff = false;
-            o.GetComponent<Collider2D>().excludeLayers -= LayerMask.GetMask("Player");
+            o.GetComponent<TilemapRenderer>().forceRenderingOff = false;
+            o.GetComponent<TilemapCollider2D>().excludeLayers -= LayerMask.GetMask("Player");
         }
     }
     public void onMove(InputAction.CallbackContext ev)
@@ -111,8 +112,7 @@ public class Player : MonoBehaviour
             grounded = false;
             myRig.velocity = Vector2.zero;
             
-            if (lastDirection == Vector2.zero)
-                lastDirection = new Vector2(lastDirection.x, 1);
+            
             
             myAnime.SetBool("Grounded", false);
             myAnime.SetBool("Jump", true);
@@ -153,16 +153,18 @@ public class Player : MonoBehaviour
         if (lastJump && canJump)
         {
 
-            if (jumpValue < 7.0f)
+            if (jumpValue < 9.0f)            
                 jumpValue += 0.1f;
             speed = 0.0f;
         }
-        else if(!lastJump && jumpValue > 2.0f)
+        else if(!lastJump && jumpValue > 1.0f)
         {
             speed = 5.0f;
+
             
-            myRig.velocity = new Vector2(lastDirection.x * jumpValue, jumpValue );
-            jumpValue = 0.0f;
+                lastDirection = new Vector2(4* lastDirection.x/jumpValue, 0.5f + 0.07f * jumpValue).normalized;
+            myRig.velocity = new Vector2(lastDirection.x * jumpValue, lastDirection.y * jumpValue);
+            jumpValue = 1.0f;
             canJump = false;
             subPortal();
             portal = jumpCharge;
@@ -171,12 +173,12 @@ public class Player : MonoBehaviour
         }
         else if (!canJump && myRig.velocity.y <= 0)
         {
-            RaycastHit2D check;
+            RaycastHit2D[] checks = Physics2D.RaycastAll(this.transform.position - new Vector3(0, 0.1f, 0), this.transform.up * -1, 0.1f);
 
-            if (check = Physics2D.Raycast(this.transform.position - new Vector3(0,0.1f,0), this.transform.up * -1))
-            {
-                if(check.collider.gameObject.GetComponent<SpriteRenderer>().forceRenderingOff == false)
-                if (check.distance < 0.01f)
+            if (checks != null)
+            {foreach(RaycastHit2D check in checks)
+                if(check.collider.gameObject.GetComponent<TilemapRenderer>().forceRenderingOff == false)
+                if (check.distance < 0.1f)
                 {
                     canJump = true;
                     
