@@ -104,18 +104,18 @@ public class Player : MonoBehaviour
         {
             
             lastJump = true;
-            
+            grounded = false;
             myRig.velocity = Vector2.zero;
             
             if (lastDirection == Vector2.zero)
-                lastDirection = new Vector2(0, 1);
+                lastDirection = new Vector2(lastDirection.x, 1);
+            
             myAnime.SetBool("Grounded", false);
             myAnime.SetBool("Jump", true);
         }
+      
         if (ev.canceled)
         {
-
-            grounded = false;
             lastJump = false;
             myAnime.SetBool("Jump", false);
         }
@@ -142,12 +142,13 @@ public class Player : MonoBehaviour
     void Update()
     {
         
-        
+        if(grounded)
         myRig.velocity = new Vector2(lastDirection.x * speed, myRig.velocity.y) + platform;
         myAnime.SetFloat("AirSpeedY", myRig.velocity.y);
 
         if (lastJump && canJump)
         {
+
             if (jumpValue < 10.0f)
                 jumpValue += 0.05f;
             speed = 0.0f;
@@ -155,7 +156,8 @@ public class Player : MonoBehaviour
         else if(!lastJump && jumpValue > 2.0f)
         {
             speed = 5.0f;
-            myRig.velocity = new Vector2(lastDirection.x * jumpValue, lastDirection.y * jumpValue );
+            
+            myRig.velocity = new Vector2(lastDirection.x * jumpValue, jumpValue );
             jumpValue = 2.0f;
             canJump = false;
             subPortal();
@@ -167,7 +169,7 @@ public class Player : MonoBehaviour
         {
             RaycastHit2D check;
 
-            if (check = Physics2D.Raycast(this.transform.position - new Vector3(0,0.5f,0), this.transform.up * -1))
+            if (check = Physics2D.Raycast(this.transform.position - new Vector3(0,0.1f,0), this.transform.up * -1))
             {
                 if (check.distance < 0.01f)
                 {
