@@ -92,6 +92,10 @@ public class Player : MonoBehaviour
             }
             
         }
+        else if(ev.performed)
+        {
+            lastDirection = ev.ReadValue<Vector2>();
+        }
         if (ev.canceled)
         {
             lastDirection = Vector2.zero;
@@ -150,7 +154,7 @@ public class Player : MonoBehaviour
         {
 
             if (jumpValue < 7.0f)
-                jumpValue += 0.2f;
+                jumpValue += 0.1f;
             speed = 0.0f;
         }
         else if(!lastJump && jumpValue > 2.0f)

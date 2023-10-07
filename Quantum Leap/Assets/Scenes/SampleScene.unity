@@ -1411,7 +1411,7 @@ MonoBehaviour:
   lastJump: 0
   portal: 1
   jumpCharge: 0
-  jumpValue: 1
+  jumpValue: 0
   grounded: 1
 --- !u!50 &843727098
 Rigidbody2D:
