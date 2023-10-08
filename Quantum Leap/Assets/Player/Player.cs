@@ -19,9 +19,11 @@ public class Player : MonoBehaviour
     public float jumpValue = 1.0f;
     GameObject[] layer;
     public bool grounded = true;
+    GameObject camera;
     // Start is called before the first frame update
     void Start()
     {
+        camera = GameObject.Find("Main Camera");
         subPortal();
         portal = 2;
         subPortal();
@@ -141,15 +143,22 @@ public class Player : MonoBehaviour
         }
         return goList.ToArray();
     }
-
+    
     // Update is called once per frame
     void Update()
     {
+        if (this.transform.position.y - camera.transform.position.y > 5.0f)
+            camera.transform.position += new Vector3(0, 10, 0);
+        else if (this.transform.position.y - camera.transform.position.y < -5.0f)
+            camera.transform.position -= new Vector3(0, 10, 0);
+
+
         
-        if(grounded)
+                
+        if (grounded)
         myRig.velocity = new Vector2(lastDirection.x * speed, myRig.velocity.y) + platform;
         myAnime.SetFloat("AirSpeedY", myRig.velocity.y);
-
+        
         if (lastJump && canJump)
         {
 
@@ -177,6 +186,7 @@ public class Player : MonoBehaviour
 
             if (checks != null)
             {foreach(RaycastHit2D check in checks)
+                    if(check.collider.gameObject.GetComponent<TilemapRenderer>() != null)
                 if(check.collider.gameObject.GetComponent<TilemapRenderer>().forceRenderingOff == false)
                 if (check.distance < 0.1f)
                 {
