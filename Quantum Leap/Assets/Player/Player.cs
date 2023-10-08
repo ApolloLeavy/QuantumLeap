@@ -7,6 +7,7 @@ using UnityEngine.Tilemaps;
 public class Player : MonoBehaviour
 {
     public Animator myAnime;
+    Animator jumpBar;
     public Vector2 platform = new Vector2(0, 0);
     public Vector2 lastDirection;
     public Rigidbody2D myRig;
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour
         camera = GameObject.Find("Main Camera");
         aspect = camera.GetComponent<Camera>().aspect;
         camSize = camera.GetComponent<Camera>().orthographicSize;
+        jumpBar = GameObject.Find("JumpBar").GetComponent<Animator>();
         subPortal();
         portal = 2;
         subPortal();
@@ -174,19 +176,23 @@ public class Player : MonoBehaviour
         myRig.velocity = new Vector2(lastDirection.x * speed, myRig.velocity.y) + platform;
         myAnime.SetFloat("AirSpeedY", myRig.velocity.y);
         
-        if (lastJump && canJump)
+        if (lastJump && canJump && lastJump)
         {
 
-            if (jumpValue < 10.0f)            
+            if (jumpValue < 10.0f)
+            {
                 jumpValue += 0.1f;
+                jumpBar.SetFloat("Power", jumpValue);
+            }
+                
             speed = 0.0f;
         }
         else if(!lastJump && jumpValue > 1.0f)
         {
             speed = 5.0f;
+            jumpBar.SetFloat("Power", 0.0f);
 
-            
-                lastDirection = new Vector2(4* lastDirection.x/jumpValue, 0.5f + 0.07f * jumpValue).normalized;
+            lastDirection = new Vector2(4* lastDirection.x/jumpValue, 0.5f + 0.07f * jumpValue).normalized;
             myRig.velocity = new Vector2(lastDirection.x * jumpValue, lastDirection.y * jumpValue);
             jumpValue = 1.0f;
             canJump = false;
