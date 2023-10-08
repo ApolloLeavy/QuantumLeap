@@ -67,6 +67,9 @@ public class Player : MonoBehaviour
         layer = FindGameObjectsInLayer(6 + portal);
         foreach (GameObject o in layer)
         {
+            if (o.GetComponent<SpriteRenderer>())
+                o.GetComponent<SpriteRenderer>().forceRenderingOff = true;
+            if (o.GetComponent<TilemapRenderer>())
             o.GetComponent<TilemapRenderer>().forceRenderingOff = true;
             if(o.GetComponent<TilemapCollider2D>())
             o.GetComponent<TilemapCollider2D>().excludeLayers += LayerMask.GetMask("Player");
@@ -77,7 +80,10 @@ public class Player : MonoBehaviour
         layer = FindGameObjectsInLayer(6 + portal);
         foreach (GameObject o in layer)
         {
-            o.GetComponent<TilemapRenderer>().forceRenderingOff = false;
+            if (o.GetComponent<SpriteRenderer>())
+                o.GetComponent<SpriteRenderer>().forceRenderingOff = false;
+            if (o.GetComponent<TilemapRenderer>())
+                o.GetComponent<TilemapRenderer>().forceRenderingOff = false;
             if (o.GetComponent<TilemapCollider2D>())
                 o.GetComponent<TilemapCollider2D>().excludeLayers -= LayerMask.GetMask("Player");
         }
