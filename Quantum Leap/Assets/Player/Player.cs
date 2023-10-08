@@ -171,7 +171,7 @@ public class Player : MonoBehaviour
         if (lastJump && canJump)
         {
 
-            if (jumpValue < 9.0f)            
+            if (jumpValue < 10.0f)            
                 jumpValue += 0.1f;
             speed = 0.0f;
         }
