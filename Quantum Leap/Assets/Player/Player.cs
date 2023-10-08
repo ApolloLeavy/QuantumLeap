@@ -20,10 +20,14 @@ public class Player : MonoBehaviour
     GameObject[] layer;
     public bool grounded = true;
     GameObject camera;
+    float aspect;
+    float camSize;
     // Start is called before the first frame update
     void Start()
     {
         camera = GameObject.Find("Main Camera");
+        aspect = camera.GetComponent<Camera>().aspect;
+        camSize = camera.GetComponent<Camera>().orthographicSize;
         subPortal();
         portal = 2;
         subPortal();
@@ -64,6 +68,7 @@ public class Player : MonoBehaviour
         foreach (GameObject o in layer)
         {
             o.GetComponent<TilemapRenderer>().forceRenderingOff = true;
+            if(o.GetComponent<TilemapCollider2D>())
             o.GetComponent<TilemapCollider2D>().excludeLayers += LayerMask.GetMask("Player");
         }
     }
@@ -73,7 +78,8 @@ public class Player : MonoBehaviour
         foreach (GameObject o in layer)
         {
             o.GetComponent<TilemapRenderer>().forceRenderingOff = false;
-            o.GetComponent<TilemapCollider2D>().excludeLayers -= LayerMask.GetMask("Player");
+            if (o.GetComponent<TilemapCollider2D>())
+                o.GetComponent<TilemapCollider2D>().excludeLayers -= LayerMask.GetMask("Player");
         }
     }
     public void onMove(InputAction.CallbackContext ev)
@@ -147,14 +153,17 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (this.transform.position.y - camera.transform.position.y > 5.0f)
+        if (this.transform.position.y - camera.transform.position.y > camSize)
             camera.transform.position += new Vector3(0, 10, 0);
-        else if (this.transform.position.y - camera.transform.position.y < -5.0f)
+        else if (this.transform.position.y - camera.transform.position.y < -1.0f * camSize)
             camera.transform.position -= new Vector3(0, 10, 0);
-
+        if (this.transform.position.x - camera.transform.position.x > aspect * camSize)
+            camera.transform.position += new Vector3(10 * aspect, 0, 0);
+        else if (this.transform.position.x - camera.transform.position.x < aspect * -1.0f * camSize)
+            camera.transform.position -= new Vector3(10 * aspect, 0, 0);
 
         
-                
+
         if (grounded)
         myRig.velocity = new Vector2(lastDirection.x * speed, myRig.velocity.y) + platform;
         myAnime.SetFloat("AirSpeedY", myRig.velocity.y);
@@ -186,7 +195,7 @@ public class Player : MonoBehaviour
 
             if (checks != null)
             {foreach(RaycastHit2D check in checks)
-                    if(check.collider.gameObject.GetComponent<TilemapRenderer>() != null)
+                    if(check.collider.gameObject.GetComponent<TilemapRenderer>() != null && check.collider.gameObject.tag != "Background")
                 if(check.collider.gameObject.GetComponent<TilemapRenderer>().forceRenderingOff == false)
                 if (check.distance < 0.1f)
                 {
